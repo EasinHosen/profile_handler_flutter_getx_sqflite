@@ -7,9 +7,16 @@ import 'package:profile_handler/pages/add_new_place.dart';
 import 'package:profile_handler/pages/home_page.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:profile_handler/pages/settings_page.dart';
+import 'package:profile_handler/services/service_workmanager.dart';
+import 'package:workmanager/workmanager.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
+  await Workmanager().initialize(
+    callbackDispatcher,
+    isInDebugMode: true,
+  );
   runApp(const MyApp());
 }
 

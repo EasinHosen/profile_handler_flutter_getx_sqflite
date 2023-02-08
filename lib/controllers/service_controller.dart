@@ -1,21 +1,18 @@
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:profile_handler/constants/constants.dart';
-import 'package:profile_handler/controllers/place_data_controller.dart';
-import 'package:profile_handler/controllers/settings_controller.dart';
-import 'package:profile_handler/db/db_listed_places.dart';
-import 'package:profile_handler/services/service_profile.dart';
 import 'package:workmanager/workmanager.dart';
 
+import 'package:profile_handler/constants/constants.dart';
+import 'package:profile_handler/controllers/settings_controller.dart';
+import 'package:profile_handler/services/service_profile.dart';
 import '../models/place_model.dart';
 import '../services/service_location.dart';
-import '../services/service_workmanager.dart';
 
 class ServiceController extends GetxController {
   static double lat = 0.0, lon = 0.0, distance = 0.0;
 
-  // static List<PlaceModel> listOfPlaces = [];
+  static List<PlaceModel> listOfPlacesSt = [];
 
   static Future<void> getPosition() async {
     final locationEnabled = await Geolocator.isLocationServiceEnabled();
@@ -38,51 +35,35 @@ class ServiceController extends GetxController {
     SettingsController().setMonitoring(keyMonitor, true);
     getPermissionStatus();
 
-    await Workmanager().initialize(
-      callbackDispatcher,
-      isInDebugMode: true,
-    );
-    // await Workmanager().registerPeriodicTask(
-    //   '1',
-    //   periodicTaskBG,
-    // );
     await Workmanager().registerOneOffTask(
       '2',
       taskOneOff,
       initialDelay: const Duration(seconds: 5),
     );
     print('monitor enabled');
+    print('st list item: ${listOfPlacesSt.length}');
+
+    // Future.delayed(const Duration(seconds: 5)).then((value) => checkDist());
   }
 
   disableMonitoring() async {
     SettingsController().setMonitoring(keyMonitor, false);
     await Workmanager().cancelAll();
     print('monitor disabled');
+    print('st list item: ${listOfPlacesSt.length}');
   }
 
   static checkDist() async {
-    var listOfPlaces = [];
-    DBListedPlaces.getListedPlaces().then((value) {
-      print('Inside db');
-      for (var e in value) {
-        listOfPlaces.add(e);
-      }
-    });
-    Future.delayed(const Duration(seconds: 3));
-    print(listOfPlaces.length);
-    if (listOfPlaces.isNotEmpty) {
+    print(listOfPlacesSt.length);
+    if (listOfPlacesSt.isNotEmpty) {
       print('checking distance');
       await getPosition();
-      for (var e in listOfPlaces) {
-        // print(e.placeEnabled);
+      for (var e in listOfPlacesSt) {
         if (e.placeEnabled) {
           distance = Geolocator.distanceBetween(
               e.placeLat.toDouble(), e.placeLon.toDouble(), lat, lon);
-
-          print(distance);
-          if (distance < 50) {
+          if (distance < SettingsController().getDefaultDistance(keyDistance)) {
             print('condition met');
-            // setVibrateMode();
             setSilentMode();
             break;
           } else {
@@ -96,6 +77,5 @@ class ServiceController extends GetxController {
     } else {
       print('Empty list');
     }
-    // listOfPlaces.clear();
   }
 }

@@ -21,34 +21,6 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
-        // actions: [
-        //   PopupMenuButton(
-        //
-        //     itemBuilder: (context) => [
-        //       PopupMenuItem(
-        //         child: Text(
-        //           _setC.getMonitoringVal(keyMonitor)
-        //               ? 'Disable monitoring'
-        //               : 'Enable monitoring',
-        //         ),
-        //         onTap: () {
-        //           _setC.getMonitoringVal(keyMonitor)
-        //               ? _sc.disableMonitoring()
-        //               : _sc.enableMonitoring();
-        //           // _sc.enableMonitoring();
-        //         },
-        //       ),
-        //       PopupMenuItem(
-        //         child: const Text(
-        //           'Settings',
-        //         ),
-        //         onTap: () {
-        //           // Get.toNamed(pageSettings);
-        //         },
-        //       ),
-        //     ],
-        //   ),
-        // ],
         actions: [
           PopupMenuButton(
             onSelected: (result) {
@@ -104,6 +76,7 @@ class HomePage extends StatelessWidget {
             itemCount: _pdc.listOfPlaces.length,
             itemBuilder: (context, index) {
               final place = _pdc.listOfPlaces[index];
+              ServiceController.listOfPlacesSt = _pdc.listOfPlaces;
               return ListTile(
                 title: Text(place.placeName),
                 subtitle:

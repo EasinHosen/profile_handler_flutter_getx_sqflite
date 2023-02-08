@@ -1,11 +1,9 @@
 import 'package:get/get.dart';
-import 'package:profile_handler/db/db_listed_places.dart';
 
+import 'package:profile_handler/db/db_listed_places.dart';
 import '../models/place_model.dart';
 
 class PlaceDataController extends GetxController {
-  // List<PlaceModel> _listOfPlaces = [];
-
   RxList<PlaceModel> listOfPlaces = <PlaceModel>[].obs;
 
   @override
@@ -20,13 +18,7 @@ class PlaceDataController extends GetxController {
         listOfPlaces.add(element);
       }
     });
-    // print(listOfPlaces.length);
   }
-
-  // List<PlaceModel> getPlaces() {
-  //   print('list length: ${_listOfPlaces.length}');
-  //   return _listOfPlaces;
-  // }
 
   Future<bool> addNewPlace(PlaceModel placeModel) async {
     final rowId = await DBListedPlaces.createPlace(placeModel);
