@@ -1,3 +1,5 @@
+import 'package:profile_handler/constants/constants.dart';
+import 'package:profile_handler/controllers/service_controller.dart';
 import 'package:workmanager/workmanager.dart';
 
 @pragma('vm:entry-point')
@@ -6,13 +8,10 @@ import 'package:workmanager/workmanager.dart';
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     switch (task) {
-      // case simplePeriTask:
-      //   print('$simplePeriTask was executed');
-      //   break;
-      // case delayedTask:
-      //   await getDistanceSetMode();
-      //   print('$delayedTask was executed');
-      //   break;
+      case taskOneOff:
+        print('Task started');
+        ServiceController.checkDist();
+        break;
     }
     return Future.value(true);
   });

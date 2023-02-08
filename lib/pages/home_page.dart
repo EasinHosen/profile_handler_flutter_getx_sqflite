@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:profile_handler/constants/constants.dart';
 import 'package:profile_handler/controllers/place_data_controller.dart';
 import 'package:profile_handler/controllers/service_controller.dart';
+import 'package:profile_handler/controllers/settings_controller.dart';
 import 'package:profile_handler/models/place_model.dart';
 
 class HomePage extends StatelessWidget {
@@ -12,33 +14,80 @@ class HomePage extends StatelessWidget {
 
   final PlaceDataController _pdc = Get.put(PlaceDataController());
   final ServiceController _sc = Get.put(ServiceController());
+  final SettingsController _setC = Get.put(SettingsController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
+        // actions: [
+        //   PopupMenuButton(
+        //
+        //     itemBuilder: (context) => [
+        //       PopupMenuItem(
+        //         child: Text(
+        //           _setC.getMonitoringVal(keyMonitor)
+        //               ? 'Disable monitoring'
+        //               : 'Enable monitoring',
+        //         ),
+        //         onTap: () {
+        //           _setC.getMonitoringVal(keyMonitor)
+        //               ? _sc.disableMonitoring()
+        //               : _sc.enableMonitoring();
+        //           // _sc.enableMonitoring();
+        //         },
+        //       ),
+        //       PopupMenuItem(
+        //         child: const Text(
+        //           'Settings',
+        //         ),
+        //         onTap: () {
+        //           // Get.toNamed(pageSettings);
+        //         },
+        //       ),
+        //     ],
+        //   ),
+        // ],
         actions: [
           PopupMenuButton(
+            onSelected: (result) {
+              switch (result) {
+                case 0:
+                  _setC.getMonitoringVal(keyMonitor)
+                      ? _sc.disableMonitoring()
+                      : _sc.enableMonitoring();
+                  break;
+                case 1:
+                  Get.toNamed(pageSettings);
+                  break;
+              }
+            },
             itemBuilder: (context) => [
               PopupMenuItem(
-                child: const Text(
-                  'Enable monitoring',
+                value: 0,
+                child: Text(
+                  _setC.getMonitoringVal(keyMonitor)
+                      ? 'Disable monitoring'
+                      : 'Enable monitoring',
                 ),
-                onTap: () {
-                  _sc.enableMonitoring(_pdc.listOfPlaces);
-                  // _sc.enableMonitoring();
-                },
+              ),
+              const PopupMenuItem(
+                value: 1,
+                child: Text('Settings page'),
               ),
             ],
-          ),
+            icon: const Icon(
+              Icons.more_vert,
+            ),
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
           Get.toNamed(
-            '/add_new_place',
+            pageAddNewPlace,
           )?.then((value) {
             if (value != null) {
               _pdc.listOfPlaces.add(value as PlaceModel);

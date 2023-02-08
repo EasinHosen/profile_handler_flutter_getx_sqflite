@@ -1,6 +1,10 @@
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:profile_handler/constants/constants.dart';
+import 'package:profile_handler/controllers/place_data_controller.dart';
+import 'package:profile_handler/controllers/settings_controller.dart';
+import 'package:profile_handler/db/db_listed_places.dart';
 import 'package:profile_handler/services/service_profile.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -9,29 +13,11 @@ import '../services/service_location.dart';
 import '../services/service_workmanager.dart';
 
 class ServiceController extends GetxController {
-  RxDouble lat = 0.0.obs, lon = 0.0.obs, distance = 0.0.obs;
+  static double lat = 0.0, lon = 0.0, distance = 0.0;
 
-  List<PlaceModel> listOfPlaces = [];
+  // static List<PlaceModel> listOfPlaces = [];
 
-  // @override
-  // void onInit() {
-  //   print('second controller init');
-  //   _getListOfPlaces();
-  //   // enableMonitoring();
-  //   super.onInit();
-  // }
-  //
-  // _getListOfPlaces() {
-  //   // listOfPlaces.clear();
-  //   DBListedPlaces.getListedPlaces().then((value) {
-  //     for (var element in value) {
-  //       listOfPlaces.add(element);
-  //     }
-  //   });
-  //   print(listOfPlaces.length);
-  // }
-
-  Future<void> getPosition() async {
+  static Future<void> getPosition() async {
     final locationEnabled = await Geolocator.isLocationServiceEnabled();
     if (!locationEnabled) {
       EasyLoading.showToast('Location is disabled');
@@ -41,40 +27,60 @@ class ServiceController extends GetxController {
     }
     try {
       Position pos = await determinePosition();
-      lat.value = pos.latitude;
-      lon.value = pos.longitude;
+      lat = pos.latitude;
+      lon = pos.longitude;
     } catch (e) {
       rethrow;
     }
   }
 
-  enableMonitoring(var list) async {
-    listOfPlaces = list;
+  enableMonitoring() async {
+    SettingsController().setMonitoring(keyMonitor, true);
     getPermissionStatus();
-    // _getListOfPlaces();
-    Workmanager().initialize(
+
+    await Workmanager().initialize(
       callbackDispatcher,
       isInDebugMode: true,
     );
-    checkDist();
+    // await Workmanager().registerPeriodicTask(
+    //   '1',
+    //   periodicTaskBG,
+    // );
+    await Workmanager().registerOneOffTask(
+      '2',
+      taskOneOff,
+      initialDelay: const Duration(seconds: 5),
+    );
+    print('monitor enabled');
   }
 
-  disableMonitoring() {}
+  disableMonitoring() async {
+    SettingsController().setMonitoring(keyMonitor, false);
+    await Workmanager().cancelAll();
+    print('monitor disabled');
+  }
 
-  checkDist() async {
-    // print(listOfPlaces.length);
-    // RingerModeStatus status = await getCurrentSoundMode();
+  static checkDist() async {
+    var listOfPlaces = [];
+    DBListedPlaces.getListedPlaces().then((value) {
+      print('Inside db');
+      for (var e in value) {
+        listOfPlaces.add(e);
+      }
+    });
+    Future.delayed(const Duration(seconds: 3));
+    print(listOfPlaces.length);
     if (listOfPlaces.isNotEmpty) {
       print('checking distance');
       await getPosition();
       for (var e in listOfPlaces) {
         // print(e.placeEnabled);
         if (e.placeEnabled) {
-          distance.value = Geolocator.distanceBetween(e.placeLat.toDouble(),
-              e.placeLon.toDouble(), lat.value, lon.value);
+          distance = Geolocator.distanceBetween(
+              e.placeLat.toDouble(), e.placeLon.toDouble(), lat, lon);
 
-          print(distance.value);
-          if (distance.value < 50) {
+          print(distance);
+          if (distance < 50) {
             print('condition met');
             // setVibrateMode();
             setSilentMode();
