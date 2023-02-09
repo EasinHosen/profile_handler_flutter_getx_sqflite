@@ -24,7 +24,7 @@ class _AddNewPlaceState extends State<AddNewPlace> {
 
   final _pdc = PlaceDataController();
 
-  // final _scon = ServiceController();
+  final _scon = ServiceController();
 
   @override
   void dispose() {
@@ -147,10 +147,10 @@ class _AddNewPlaceState extends State<AddNewPlace> {
   }
 
   void _getLocation() async {
-    await ServiceController.getPosition();
+    await _scon.getPosition();
     setState(() {
-      _lat = ServiceController.lat;
-      _lon = ServiceController.lon;
+      _lat = _scon.lat;
+      _lon = _scon.lon;
     });
   }
 }

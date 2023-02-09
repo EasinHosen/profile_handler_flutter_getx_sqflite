@@ -6,15 +6,16 @@ import 'package:workmanager/workmanager.dart';
 import 'package:profile_handler/constants/constants.dart';
 import 'package:profile_handler/controllers/settings_controller.dart';
 import 'package:profile_handler/services/service_profile.dart';
+import '../db/db_listed_places.dart';
 import '../models/place_model.dart';
 import '../services/service_location.dart';
 
 class ServiceController extends GetxController {
-  static double lat = 0.0, lon = 0.0, distance = 0.0;
+  double lat = 0.0, lon = 0.0, distance = 0.0;
 
-  static List<PlaceModel> listOfPlacesSt = [];
+  // static List<PlaceModel> listOfPlacesSt = [];
 
-  static Future<void> getPosition() async {
+  Future<void> getPosition() async {
     final locationEnabled = await Geolocator.isLocationServiceEnabled();
     if (!locationEnabled) {
       EasyLoading.showToast('Location is disabled');
@@ -35,13 +36,22 @@ class ServiceController extends GetxController {
     SettingsController().setMonitoring(keyMonitor, true);
     getPermissionStatus();
 
-    await Workmanager().registerOneOffTask(
-      '2',
-      taskOneOff,
-      initialDelay: const Duration(seconds: 5),
+    // await Workmanager().registerOneOffTask(
+    //   '2',
+    //   taskOneOff,
+    //   initialDelay: const Duration(seconds: 5),
+    // );
+    await Workmanager().registerPeriodicTask(
+      '1',
+      taskPeriodicBG,
+      initialDelay: Duration(
+        minutes: SettingsController().getDefaultDuration(keyFrequency),
+      ),
+      frequency: Duration(
+        minutes: SettingsController().getDefaultDuration(keyFrequency),
+      ),
     );
     print('monitor enabled');
-    print('st list item: ${listOfPlacesSt.length}');
 
     // Future.delayed(const Duration(seconds: 5)).then((value) => checkDist());
   }
@@ -50,21 +60,25 @@ class ServiceController extends GetxController {
     SettingsController().setMonitoring(keyMonitor, false);
     await Workmanager().cancelAll();
     print('monitor disabled');
-    print('st list item: ${listOfPlacesSt.length}');
   }
 
-  static checkDist() async {
-    print(listOfPlacesSt.length);
-    if (listOfPlacesSt.isNotEmpty) {
+  static checkDist(var list, Position position) async {
+    double lat, lon, distance;
+    print(list.length);
+
+    lat = position.latitude;
+    lon = position.longitude;
+    if (list.isNotEmpty) {
       print('checking distance');
-      await getPosition();
-      for (var e in listOfPlacesSt) {
+      print('lat: $lat, lon: $lon');
+      for (var e in list) {
         if (e.placeEnabled) {
           distance = Geolocator.distanceBetween(
               e.placeLat.toDouble(), e.placeLon.toDouble(), lat, lon);
           if (distance < SettingsController().getDefaultDistance(keyDistance)) {
             print('condition met');
-            setSilentMode();
+            // setSilentMode();
+            setVibrateMode();
             break;
           } else {
             print('condition not met');

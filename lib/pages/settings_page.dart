@@ -15,15 +15,15 @@ class SettingsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
-        actions: [
-          TextButton(
-            onPressed: _saveSettings,
-            child: const Text(
-              'Save',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
+        // actions: [
+        //   TextButton(
+        //     onPressed: _saveSettings,
+        //     child: const Text(
+        //       'Save',
+        //       style: TextStyle(color: Colors.white),
+        //     ),
+        //   ),
+        // ],
       ),
       body: SafeArea(
         child: GetBuilder<SettingsController>(

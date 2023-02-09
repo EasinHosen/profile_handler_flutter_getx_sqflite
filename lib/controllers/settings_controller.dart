@@ -35,12 +35,12 @@ class SettingsController extends GetxController {
 
   double getDefaultDistance(key) => GetStorage().read(key) ?? 50;
 
-  void setDefaultDuration(String key, double val) {
+  void setDefaultDuration(String key, int val) {
     GetStorage().write(key, val);
     update();
   }
 
-  double getDefaultDuration(key) => GetStorage().read(key) ?? 15;
+  int getDefaultDuration(key) => GetStorage().read(key) ?? 15;
 
   readStorageValue(key) => GetStorage().read(key);
 }

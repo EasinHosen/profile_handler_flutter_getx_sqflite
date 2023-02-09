@@ -76,11 +76,10 @@ class HomePage extends StatelessWidget {
             itemCount: _pdc.listOfPlaces.length,
             itemBuilder: (context, index) {
               final place = _pdc.listOfPlaces[index];
-              ServiceController.listOfPlacesSt = _pdc.listOfPlaces;
               return ListTile(
                 title: Text(place.placeName),
-                subtitle:
-                    Text('Lat: ${place.placeLat}\nLon: ${place.placeLon}'),
+                // subtitle:
+                // Text('Lat: ${place.placeLat}\nLon: ${place.placeLon}'),
                 onTap: () {
                   print('${place.placeName} ${place.placeId} $index');
                 },
