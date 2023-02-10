@@ -6,14 +6,10 @@ import 'package:workmanager/workmanager.dart';
 import 'package:profile_handler/constants/constants.dart';
 import 'package:profile_handler/controllers/settings_controller.dart';
 import 'package:profile_handler/services/service_profile.dart';
-import '../db/db_listed_places.dart';
-import '../models/place_model.dart';
 import '../services/service_location.dart';
 
 class ServiceController extends GetxController {
   double lat = 0.0, lon = 0.0, distance = 0.0;
-
-  // static List<PlaceModel> listOfPlacesSt = [];
 
   Future<void> getPosition() async {
     final locationEnabled = await Geolocator.isLocationServiceEnabled();
@@ -32,37 +28,47 @@ class ServiceController extends GetxController {
     }
   }
 
-  enableMonitoring() async {
-    SettingsController().setMonitoring(keyMonitor, true);
-    getPermissionStatus();
+  Future<void> enableMonitoring() async {
+    bool status = await getPermissionStatus();
+    if (!status) {
+      openDoNotDisturbSettings();
+    }
+    final locationCheck = await Geolocator.isLocationServiceEnabled();
+    if (!locationCheck) {
+      EasyLoading.showError('Location Disabled!!');
+      await Geolocator.getCurrentPosition();
+      enableMonitoring();
+    } else {
+      SettingsController().setMonitoring(keyMonitor, true);
 
-    // await Workmanager().registerOneOffTask(
-    //   '2',
-    //   taskOneOff,
-    //   initialDelay: const Duration(seconds: 5),
-    // );
-    await Workmanager().registerPeriodicTask(
-      '1',
-      taskPeriodicBG,
-      initialDelay: Duration(
-        minutes: SettingsController().getDefaultDuration(keyFrequency),
-      ),
-      frequency: Duration(
-        minutes: SettingsController().getDefaultDuration(keyFrequency),
-      ),
-    );
-    print('monitor enabled');
-
-    // Future.delayed(const Duration(seconds: 5)).then((value) => checkDist());
+      // await Workmanager().registerOneOffTask(
+      //   '2',
+      //   taskOneOff,
+      //   initialDelay: const Duration(seconds: 5),
+      // );
+      await Workmanager().registerPeriodicTask(
+        '1',
+        taskPeriodicBG,
+        initialDelay: const Duration(
+            // minutes: SettingsController().getDefaultDuration(keyFrequency),
+            seconds: 15),
+        frequency: Duration(
+          minutes: SettingsController().getDefaultDuration(keyFrequency),
+        ),
+      );
+      print('monitor enabled');
+      EasyLoading.showToast('Monitoring Enabled');
+    }
   }
 
-  disableMonitoring() async {
+  Future<void> disableMonitoring() async {
     SettingsController().setMonitoring(keyMonitor, false);
     await Workmanager().cancelAll();
     print('monitor disabled');
+    EasyLoading.showToast('Monitoring Disabled');
   }
 
-  static checkDist(var list, Position position) async {
+  static checkDist(var list, Position position) {
     double lat, lon, distance;
     print(list.length);
 

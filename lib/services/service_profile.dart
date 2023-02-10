@@ -1,6 +1,5 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:sound_mode/permission_handler.dart';
 import 'package:sound_mode/sound_mode.dart';
 import 'package:sound_mode/utils/ringer_mode_statuses.dart';
@@ -16,17 +15,17 @@ Future<RingerModeStatus> getCurrentSoundMode() async {
   return ringerStatus;
 }
 
-Future<void> getPermissionStatus() async {
+Future<bool> getPermissionStatus() async {
   bool? permissionStatus = false;
   try {
     permissionStatus = await PermissionHandler.permissionsGranted;
-    if (permissionStatus == false) {
-      openDoNotDisturbSettings();
+    if (permissionStatus == true) {
+      return true;
     }
-    // print(permissionStatus);
   } catch (err) {
     print(err);
   }
+  return false;
 }
 
 Future<void> openDoNotDisturbSettings() async {

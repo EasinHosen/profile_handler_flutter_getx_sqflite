@@ -4,6 +4,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:profile_handler/constants/constants.dart';
 
 class SettingsController extends GetxController {
+  RxBool monitorEnable = false.obs;
+
   void setMonitoring(String key, bool val) {
     GetStorage().write(key, val);
     update();

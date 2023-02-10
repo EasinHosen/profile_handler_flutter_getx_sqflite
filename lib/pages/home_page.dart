@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:led_bulb_indicator/led_bulb_indicator.dart';
 import 'package:profile_handler/constants/constants.dart';
 import 'package:profile_handler/controllers/place_data_controller.dart';
 import 'package:profile_handler/controllers/service_controller.dart';
@@ -18,17 +19,39 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _setC.monitorEnable.value = _setC.getMonitoringVal(keyMonitor);
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Row(
+          children: [
+            Obx(
+              () => LedBulbIndicator(
+                initialState: _setC.monitorEnable.value
+                    ? LedBulbColors.green
+                    : LedBulbColors.red,
+                size: 10,
+                margin: 5,
+                glow: true,
+              ),
+            ),
+            Text(title),
+          ],
+        ),
         actions: [
           PopupMenuButton(
             onSelected: (result) {
               switch (result) {
                 case 0:
                   _setC.getMonitoringVal(keyMonitor)
-                      ? _sc.disableMonitoring()
-                      : _sc.enableMonitoring();
+                      ? _sc
+                          .disableMonitoring()
+                          .then((value) => _setC.monitorEnable.value = false)
+                      : _sc
+                          .enableMonitoring()
+                          .then((value) => _setC.monitorEnable.value = true);
+                  // _setC.getMonitoringVal(keyMonitor)
+                  //    ? _setC.monitorEnable.value = true
+                  //    : _setC.monitorEnable.value = false;
                   break;
                 case 1:
                   Get.toNamed(pageSettings);
@@ -46,7 +69,7 @@ class HomePage extends StatelessWidget {
               ),
               const PopupMenuItem(
                 value: 1,
-                child: Text('Settings page'),
+                child: Text('Settings'),
               ),
             ],
             icon: const Icon(

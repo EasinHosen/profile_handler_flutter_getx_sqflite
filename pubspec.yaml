@@ -41,6 +41,7 @@ dependencies:
   geolocator: ^9.0.2
   get: ^4.6.5
   get_storage: ^2.0.3
+  led_bulb_indicator: ^0.0.1
   path:
   sound_mode: ^2.0.2
   sqflite:

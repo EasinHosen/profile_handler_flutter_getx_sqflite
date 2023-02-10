@@ -13,9 +13,19 @@ void callbackDispatcher() {
     switch (task) {
       case taskPeriodicBG:
         var list = await DBListedPlaces.getListedPlaces();
-        Position userLocation = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.high);
-        ServiceController.checkDist(list, userLocation);
+        Position? userLocation;
+        try {
+          userLocation = await Geolocator.getCurrentPosition(
+            timeLimit: const Duration(minutes: 1),
+          );
+        } catch (e) {
+          userLocation = await Geolocator.getLastKnownPosition();
+        }
+        if (userLocation == null) {
+          //send user a notification
+        } else {
+          ServiceController.checkDist(list, userLocation);
+        }
         break;
     }
     return Future.value(true);
