@@ -20,3 +20,4 @@ const String keyIsDarkTheme = 'isDark';
 const String keyMonitor = 'bgMonitor';
 const String keyDistance = 'distanceDefault';
 const String keyFrequency = 'frequency';
+const String keyProfileMode = 'profileDefault';

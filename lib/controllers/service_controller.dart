@@ -40,21 +40,20 @@ class ServiceController extends GetxController {
       enableMonitoring();
     } else {
       SettingsController().setMonitoring(keyMonitor, true);
-
-      // await Workmanager().registerOneOffTask(
-      //   '2',
-      //   taskOneOff,
-      //   initialDelay: const Duration(seconds: 5),
-      // );
       await Workmanager().registerPeriodicTask(
         '1',
         taskPeriodicBG,
-        initialDelay: const Duration(
-            // minutes: SettingsController().getDefaultDuration(keyFrequency),
-            seconds: 15),
+        initialDelay: Duration(
+          minutes: SettingsController().getDefaultDuration(keyFrequency),
+          // seconds: 10,
+        ),
         frequency: Duration(
           minutes: SettingsController().getDefaultDuration(keyFrequency),
         ),
+        inputData: {
+          'defDist': SettingsController().getDefaultDistance(keyDistance),
+          'defMode': SettingsController().getProfileMode(keyProfileMode),
+        },
       );
       print('monitor enabled');
       EasyLoading.showToast('Monitoring Enabled');
@@ -68,23 +67,22 @@ class ServiceController extends GetxController {
     EasyLoading.showToast('Monitoring Disabled');
   }
 
-  static checkDist(var list, Position position) {
+  static checkDist(var list, Position position, double defDist, String mode) {
     double lat, lon, distance;
-    print(list.length);
 
     lat = position.latitude;
     lon = position.longitude;
     if (list.isNotEmpty) {
       print('checking distance');
-      print('lat: $lat, lon: $lon');
       for (var e in list) {
         if (e.placeEnabled) {
           distance = Geolocator.distanceBetween(
               e.placeLat.toDouble(), e.placeLon.toDouble(), lat, lon);
-          if (distance < SettingsController().getDefaultDistance(keyDistance)) {
+          if (distance < defDist) {
             print('condition met');
+            print('cuDist: $distance, defDist: $defDist, defMode: $mode');
             // setSilentMode();
-            setVibrateMode();
+            mode == 'Vibration' ? setVibrateMode() : setSilentMode();
             break;
           } else {
             print('condition not met');

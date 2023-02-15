@@ -15,7 +15,7 @@ void main() async {
   await GetStorage.init();
   await Workmanager().initialize(
     callbackDispatcher,
-    isInDebugMode: true,
+    // isInDebugMode: true,
   );
   runApp(const MyApp());
 }

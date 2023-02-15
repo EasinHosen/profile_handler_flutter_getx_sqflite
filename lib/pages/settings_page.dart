@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:profile_handler/constants/constants.dart';
 import 'package:profile_handler/controllers/settings_controller.dart';
@@ -8,22 +9,11 @@ class SettingsPage extends StatelessWidget {
 
   final String title;
 
-  // final SettingsController _sc = SettingsController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
-        // actions: [
-        //   TextButton(
-        //     onPressed: _saveSettings,
-        //     child: const Text(
-        //       'Save',
-        //       style: TextStyle(color: Colors.white),
-        //     ),
-        //   ),
-        // ],
       ),
       body: SafeArea(
         child: GetBuilder<SettingsController>(
@@ -36,17 +26,131 @@ class SettingsPage extends StatelessWidget {
                   onChanged: (value) {
                     controller.setIsDarkTheme(keyIsDarkTheme, value);
                     Get.changeTheme(controller.theme);
-                    print(controller.readStorageValue(keyIsDarkTheme));
+                    value
+                        ? EasyLoading.showToast('Dark theme enabled')
+                        : EasyLoading.showToast('Dark theme disabled');
                   },
                   value: controller.getIsDarkTheme(keyIsDarkTheme),
                 ),
-              )
+              ), //theme settings
+              ListTile(
+                title: const Text('Notification'),
+                onTap: () {
+                  EasyLoading.showToast('feature will be available soon');
+                },
+                // trailing: Switch(
+                //   onChanged: (value) {
+                //     controller.setIsDarkTheme(keyIsDarkTheme, value);
+                //     Get.changeTheme(controller.theme);
+                //   },
+                //   value: controller.getIsDarkTheme(keyIsDarkTheme),
+                // ),
+              ), //Notification settings
+              ListTile(
+                title: const Text('Radius'),
+                subtitle:
+                    Text('${controller.getDefaultDistance(keyDistance)} meter'),
+                trailing: IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () async {
+                    await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return SimpleDialog(
+                          title: const Text("Select Radius"),
+                          children: [
+                            ...controller.distanceList.map((value) {
+                              return SimpleDialogOption(
+                                child: Text(
+                                  value.toString(),
+                                ),
+                                onPressed: () {
+                                  controller.setDefaultDistance(
+                                      keyDistance, value);
+                                  EasyLoading.showToast(
+                                      'Radius set to $value meters');
+                                  Navigator.pop(context);
+                                },
+                              );
+                            }),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+              ListTile(
+                title: const Text('Frequency(min 15)'),
+                subtitle: Text(
+                    '${controller.getDefaultDuration(keyFrequency)} minutes'),
+                trailing: IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () async {
+                    await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return SimpleDialog(
+                          title: const Text("Select frequency"),
+                          children: [
+                            ...controller.durationList.map((value) {
+                              return SimpleDialogOption(
+                                child: Text(
+                                  value.toString(),
+                                ),
+                                onPressed: () {
+                                  controller.setDefaultDuration(
+                                      keyFrequency, value);
+                                  EasyLoading.showToast(
+                                      'Frequency set to $value minutes');
+                                  Navigator.pop(context);
+                                },
+                              );
+                            }),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+              ListTile(
+                title: const Text('Default mode'),
+                subtitle: Text(controller.getProfileMode(keyProfileMode)),
+                trailing: IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () async {
+                    await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return SimpleDialog(
+                          title: const Text("Select Default mode"),
+                          children: [
+                            ...controller.modeList.map((value) {
+                              return SimpleDialogOption(
+                                child: Text(
+                                  value,
+                                ),
+                                onPressed: () {
+                                  controller.setProfileMode(
+                                      keyProfileMode, value);
+                                  EasyLoading.showToast(
+                                      'Default mode set to $value mode');
+                                  Navigator.pop(context);
+                                },
+                              );
+                            }),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
   }
-
-  void _saveSettings() {}
 }

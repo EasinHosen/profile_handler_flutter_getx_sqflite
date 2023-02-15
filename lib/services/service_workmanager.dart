@@ -5,6 +5,8 @@ import 'package:workmanager/workmanager.dart';
 import 'package:profile_handler/constants/constants.dart';
 import 'package:profile_handler/controllers/service_controller.dart';
 
+import '../controllers/settings_controller.dart';
+
 @pragma('vm:entry-point')
 // Mandatory if the App is obfuscated or using Flutter 3.1+
 
@@ -12,7 +14,6 @@ void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     switch (task) {
       case taskPeriodicBG:
-        var list = await DBListedPlaces.getListedPlaces();
         Position? userLocation;
         try {
           userLocation = await Geolocator.getCurrentPosition(
@@ -24,7 +25,10 @@ void callbackDispatcher() {
         if (userLocation == null) {
           //send user a notification
         } else {
-          ServiceController.checkDist(list, userLocation);
+          var list = await DBListedPlaces.getListedPlaces();
+          double defDist = inputData!['defDist'];
+          String mode = inputData['defMode'];
+          ServiceController.checkDist(list, userLocation, defDist, mode);
         }
         break;
     }
