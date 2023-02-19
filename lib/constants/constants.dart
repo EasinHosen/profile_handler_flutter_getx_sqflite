@@ -17,6 +17,7 @@ const String taskOneOff = 'oneOffTask';
 
 //GetStorage related keys
 const String keyIsDarkTheme = 'isDark';
+const String keyIsNotificationEnabled = 'isNotificationEnabled';
 const String keyMonitor = 'bgMonitor';
 const String keyDistance = 'distanceDefault';
 const String keyFrequency = 'frequency';

@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -17,7 +18,19 @@ void main() async {
     callbackDispatcher,
     // isInDebugMode: true,
   );
-  runApp(const MyApp());
+  AwesomeNotifications().initialize(
+    null,
+    [
+      NotificationChannel(
+          channelKey: 'test_key',
+          channelName: 'KKEB',
+          channelDescription: 'Channel Desc'),
+    ],
+    debug: true,
+  );
+  runApp(
+    const MyApp(),
+  );
 }
 
 class MyApp extends StatelessWidget {

@@ -1,11 +1,11 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:profile_handler/db/db_listed_places.dart';
+import 'package:profile_handler/models/place_model.dart';
+import 'package:profile_handler/services/service_awesome_notification.dart';
 import 'package:workmanager/workmanager.dart';
 
 import 'package:profile_handler/constants/constants.dart';
 import 'package:profile_handler/controllers/service_controller.dart';
-
-import '../controllers/settings_controller.dart';
 
 @pragma('vm:entry-point')
 // Mandatory if the App is obfuscated or using Flutter 3.1+
@@ -25,10 +25,17 @@ void callbackDispatcher() {
         if (userLocation == null) {
           //send user a notification
         } else {
-          var list = await DBListedPlaces.getListedPlaces();
+          List<PlaceModel> list = await DBListedPlaces.getListedPlaces();
           double defDist = inputData!['defDist'];
           String mode = inputData['defMode'];
-          ServiceController.checkDist(list, userLocation, defDist, mode);
+          bool isNotificationEnabled = inputData['notification'];
+          ServiceController.takeAction(
+            list,
+            userLocation,
+            defDist,
+            mode,
+            isNotificationEnabled,
+          );
         }
         break;
     }

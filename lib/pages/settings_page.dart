@@ -1,8 +1,11 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:profile_handler/constants/constants.dart';
 import 'package:profile_handler/controllers/settings_controller.dart';
+import 'package:profile_handler/services/service_profile.dart';
+import 'package:workmanager/workmanager.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({Key? key, required this.title}) : super(key: key);
@@ -35,16 +38,31 @@ class SettingsPage extends StatelessWidget {
               ), //theme settings
               ListTile(
                 title: const Text('Notification'),
-                onTap: () {
-                  EasyLoading.showToast('feature will be available soon');
-                },
-                // trailing: Switch(
-                //   onChanged: (value) {
-                //     controller.setIsDarkTheme(keyIsDarkTheme, value);
-                //     Get.changeTheme(controller.theme);
-                //   },
-                //   value: controller.getIsDarkTheme(keyIsDarkTheme),
-                // ),
+                trailing: Switch(
+                  onChanged: (value) {
+                    AwesomeNotifications().isNotificationAllowed().then(
+                          (isAllowed) => {
+                            if (!isAllowed)
+                              {
+                                AwesomeNotifications()
+                                    .requestPermissionToSendNotifications()
+                              }
+                            else
+                              {
+                                controller.setIsNotificationEnabled(
+                                  keyIsNotificationEnabled,
+                                  value,
+                                ),
+                              }
+                          },
+                        );
+                    value
+                        ? EasyLoading.showToast('Notification enabled')
+                        : EasyLoading.showToast('Notification disabled');
+                  },
+                  value: controller
+                      .getIsNotificationEnabled(keyIsNotificationEnabled),
+                ),
               ), //Notification settings
               ListTile(
                 title: const Text('Radius'),
@@ -146,6 +164,18 @@ class SettingsPage extends StatelessWidget {
                     );
                   },
                 ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setNormalMode();
+                },
+                child: const Text('Normal mode'),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Text(
+                'Please restart monitoring after changing current settings!!',
               ),
             ],
           ),

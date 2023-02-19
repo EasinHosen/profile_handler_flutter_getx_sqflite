@@ -24,6 +24,13 @@ class SettingsController extends GetxController {
 
   bool getMonitoringVal(key) => GetStorage().read(key) ?? false;
 
+  void setIsNotificationEnabled(String key, bool val) {
+    GetStorage().write(key, val);
+    update();
+  }
+
+  bool getIsNotificationEnabled(key) => GetStorage().read(key) ?? false;
+
   void setIsDarkTheme(String key, bool val) {
     GetStorage().write(key, val);
     update();

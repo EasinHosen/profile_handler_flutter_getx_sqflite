@@ -35,8 +35,10 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
+  awesome_notifications: ^0.7.4+1
   cupertino_icons: ^1.0.5
   flutter_easyloading:
+  #  flutter_local_notifications: ^13.0.0
   geocoding:
   geolocator: ^9.0.2
   get: ^4.6.5

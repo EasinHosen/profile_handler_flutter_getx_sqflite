@@ -1,6 +1,8 @@
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:profile_handler/models/place_model.dart';
+import 'package:profile_handler/services/service_awesome_notification.dart';
 import 'package:workmanager/workmanager.dart';
 
 import 'package:profile_handler/constants/constants.dart';
@@ -45,14 +47,18 @@ class ServiceController extends GetxController {
         taskPeriodicBG,
         initialDelay: Duration(
           minutes: SettingsController().getDefaultDuration(keyFrequency),
-          // seconds: 10,
         ),
+        // initialDelay: const Duration(
+        //   seconds: 10,
+        // ),
         frequency: Duration(
           minutes: SettingsController().getDefaultDuration(keyFrequency),
         ),
         inputData: {
           'defDist': SettingsController().getDefaultDistance(keyDistance),
           'defMode': SettingsController().getProfileMode(keyProfileMode),
+          'notification': SettingsController()
+              .getIsNotificationEnabled(keyIsNotificationEnabled),
         },
       );
       print('monitor enabled');
@@ -67,23 +73,33 @@ class ServiceController extends GetxController {
     EasyLoading.showToast('Monitoring Disabled');
   }
 
-  static checkDist(var list, Position position, double defDist, String mode) {
+  static takeAction(
+    List<PlaceModel> list,
+    Position position,
+    double defDist,
+    String mode,
+    bool notificationEnabled,
+  ) {
     double lat, lon, distance;
 
     lat = position.latitude;
     lon = position.longitude;
     if (list.isNotEmpty) {
       print('checking distance');
-      for (var e in list) {
+      for (PlaceModel e in list) {
         if (e.placeEnabled) {
           distance = Geolocator.distanceBetween(
               e.placeLat.toDouble(), e.placeLon.toDouble(), lat, lon);
           if (distance < defDist) {
             print('condition met');
-            print('cuDist: $distance, defDist: $defDist, defMode: $mode');
-            // setSilentMode();
             mode == 'Vibration' ? setVibrateMode() : setSilentMode();
-            break;
+            if (notificationEnabled) {
+              notificationService(
+                'Profile changed!!',
+                'Mode changed to "$mode" for "${e.placeName}"',
+              );
+            }
+            return;
           } else {
             print('condition not met');
           }
