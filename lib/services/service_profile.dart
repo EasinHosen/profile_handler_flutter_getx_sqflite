@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sound_mode/permission_handler.dart';
@@ -8,7 +9,6 @@ Future<RingerModeStatus> getCurrentSoundMode() async {
   RingerModeStatus ringerStatus = RingerModeStatus.unknown;
   try {
     ringerStatus = await SoundMode.ringerModeStatus;
-    // print('try block res: $ringerStatus');
   } catch (err) {
     ringerStatus = RingerModeStatus.unknown;
   }
@@ -23,7 +23,9 @@ Future<bool> getPermissionStatus() async {
       return true;
     }
   } catch (err) {
-    print(err);
+    if (kDebugMode) {
+      print(err);
+    }
   }
   return false;
 }
@@ -36,7 +38,6 @@ Future<void> setSilentMode() async {
   try {
     await SoundMode.setSoundMode(RingerModeStatus.silent);
   } on PlatformException {
-    // print('Do Not Disturb access permissions required!');
     EasyLoading.showError('DND Access permission required');
   }
 }
@@ -46,7 +47,6 @@ Future<void> setNormalMode() async {
     await SoundMode.setSoundMode(RingerModeStatus.normal);
   } on PlatformException {
     EasyLoading.showError('DND Access permission required');
-    // print('Do Not Disturb access permissions required!');
   }
 }
 
@@ -55,6 +55,5 @@ Future<void> setVibrateMode() async {
     await SoundMode.setSoundMode(RingerModeStatus.vibrate);
   } on PlatformException {
     EasyLoading.showError('DND Access permission required');
-    // print('Do Not Disturb access permissions required!');
   }
 }

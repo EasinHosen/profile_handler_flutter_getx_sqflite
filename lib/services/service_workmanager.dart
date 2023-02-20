@@ -1,7 +1,6 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:profile_handler/db/db_listed_places.dart';
 import 'package:profile_handler/models/place_model.dart';
-import 'package:profile_handler/services/service_awesome_notification.dart';
 import 'package:workmanager/workmanager.dart';
 
 import 'package:profile_handler/constants/constants.dart';

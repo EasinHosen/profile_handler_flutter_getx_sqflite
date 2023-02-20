@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:profile_handler/constants/constants.dart';
 import 'package:profile_handler/controllers/settings_controller.dart';
 import 'package:profile_handler/services/service_profile.dart';
-import 'package:workmanager/workmanager.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({Key? key, required this.title}) : super(key: key);

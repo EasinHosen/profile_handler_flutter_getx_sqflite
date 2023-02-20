@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -49,9 +50,6 @@ class HomePage extends StatelessWidget {
                       : _sc
                           .enableMonitoring()
                           .then((value) => _setC.monitorEnable.value = true);
-                  // _setC.getMonitoringVal(keyMonitor)
-                  //    ? _setC.monitorEnable.value = true
-                  //    : _setC.monitorEnable.value = false;
                   break;
                 case 1:
                   Get.toNamed(pageSettings);
@@ -86,7 +84,9 @@ class HomePage extends StatelessWidget {
           )?.then((value) {
             if (value != null) {
               _pdc.listOfPlaces.add(value as PlaceModel);
-              print(value);
+              if (kDebugMode) {
+                print(value);
+              }
             } else {
               EasyLoading.showError('Operation canceled');
             }
@@ -101,10 +101,81 @@ class HomePage extends StatelessWidget {
               final place = _pdc.listOfPlaces[index];
               return ListTile(
                 title: Text(place.placeName),
-                // subtitle:
-                // Text('Lat: ${place.placeLat}\nLon: ${place.placeLon}'),
                 onTap: () {
-                  print('${place.placeName} ${place.placeId} $index');
+                  if (kDebugMode) {
+                    print('${place.placeName} ${place.placeId} $index');
+                  }
+                  _pdc.placeNameController.text = place.placeName;
+                  Get.defaultDialog(
+                      title: '',
+                      barrierDismissible: false,
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextField(
+                            controller: _pdc.placeNameController,
+                            keyboardType: TextInputType.text,
+                            maxLines: 1,
+                            decoration: const InputDecoration(
+                              labelText: 'Place Name',
+                              hintMaxLines: 1,
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.green,
+                                  width: 4.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          Obx(
+                            () => Text(
+                              _pdc.placeNameEmpty.value
+                                  ? 'Place name can not be left empty!!'
+                                  : '',
+                              style: const TextStyle(
+                                  color: Colors.red, fontSize: 12.0),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 16.0,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  _pdc.placeNameEmpty.value = false;
+                                  Get.back();
+                                },
+                                child: const Text('Cancel'),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  if (_pdc
+                                      .placeNameController.text.isNotEmpty) {
+                                    _pdc.updatePlaceName(index, place.placeId!,
+                                        _pdc.placeNameController.text);
+                                    _pdc.placeNameEmpty.value = false;
+                                    Get.back();
+                                  } else {
+                                    _pdc.placeNameEmpty.value = true;
+                                  }
+                                },
+                                child: const Text(
+                                  'Save',
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                      radius: 10.0);
                 },
                 onLongPress: () {
                   Get.defaultDialog(
@@ -121,7 +192,9 @@ class HomePage extends StatelessWidget {
                       Get.back();
                     },
                     onCancel: () {
-                      print('Canceled');
+                      if (kDebugMode) {
+                        print('Canceled');
+                      }
                       Get.back();
                     },
                     barrierDismissible: false,

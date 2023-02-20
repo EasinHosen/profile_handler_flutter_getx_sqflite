@@ -49,22 +49,22 @@ class DBListedPlaces {
     );
   }
 
-  static Future<int> updatePlace(PlaceModel placeModel) async {
-    final db = await open();
-
-    return db.update(
-      tablePlaces,
-      {
-        tablePlacesId: placeModel.placeId,
-        tablePlacesName: placeModel.placeName,
-        tablePlacesLat: placeModel.placeLat,
-        tablePlacesLon: placeModel.placeLon,
-        tablePlacesIsEnabled: placeModel.placeEnabled,
-      },
-      where: '$tablePlacesId = ?',
-      whereArgs: [placeModel.placeId],
-    );
-  }
+  // static Future<int> updatePlace(PlaceModel placeModel) async {
+  //   final db = await open();
+  //
+  //   return db.update(
+  //     tablePlaces,
+  //     {
+  //       tablePlacesId: placeModel.placeId,
+  //       tablePlacesName: placeModel.placeName,
+  //       tablePlacesLat: placeModel.placeLat,
+  //       tablePlacesLon: placeModel.placeLon,
+  //       tablePlacesIsEnabled: placeModel.placeEnabled,
+  //     },
+  //     where: '$tablePlacesId = ?',
+  //     whereArgs: [placeModel.placeId],
+  //   );
+  // }
 
   static Future<int> updateIsEnabled(int placeId, int value) async {
     final db = await open();
@@ -76,6 +76,19 @@ class DBListedPlaces {
       },
       where: '$tablePlacesId = ?',
       whereArgs: [placeId],
+    );
+  }
+
+  static Future<int> updatePlaceName(int id, String name) async {
+    final db = await open();
+
+    return db.update(
+      tablePlaces,
+      {
+        tablePlacesName: name,
+      },
+      where: '$tablePlacesId = ?',
+      whereArgs: [id],
     );
   }
 }

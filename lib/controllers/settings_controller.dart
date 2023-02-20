@@ -6,9 +6,30 @@ import 'package:profile_handler/constants/constants.dart';
 class SettingsController extends GetxController {
   RxBool monitorEnable = false.obs;
 
-  List<String> modeList = ['Vibration', 'Silent'];
-  List<int> durationList = [15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
-  List<double> distanceList = [50.0, 60.0, 70.0, 80.0, 90.0, 100.0];
+  List<String> modeList = [
+    'Vibration',
+    'Silent',
+  ];
+  List<int> durationList = [
+    15,
+    20,
+    25,
+    30,
+    35,
+    40,
+    45,
+    50,
+    55,
+    60,
+  ];
+  List<double> distanceList = [
+    50.0,
+    60.0,
+    70.0,
+    80.0,
+    90.0,
+    100.0,
+  ];
 
   void setProfileMode(String key, String mode) {
     GetStorage().write(key, mode);

@@ -24,7 +24,7 @@ class _AddNewPlaceState extends State<AddNewPlace> {
 
   final _pdc = PlaceDataController();
 
-  final _scon = ServiceController();
+  final _sCon = ServiceController();
 
   @override
   void dispose() {
@@ -82,15 +82,22 @@ class _AddNewPlaceState extends State<AddNewPlace> {
                 width: double.infinity,
                 height: 50,
                 decoration: BoxDecoration(
-                  border: Border.all(width: 1, color: Colors.grey),
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  border: Border.all(
+                    width: 1,
+                    color: Colors.grey,
+                  ),
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(10),
+                  ),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     _lat == 0 ? 'Latitude' : 'Latitude: $_lat',
-                    style:
-                        const TextStyle(color: Colors.blueGrey, fontSize: 15),
+                    style: const TextStyle(
+                      color: Colors.blueGrey,
+                      fontSize: 15,
+                    ),
                   ),
                 ),
               ),
@@ -120,6 +127,11 @@ class _AddNewPlaceState extends State<AddNewPlace> {
                 onPressed: _getLocation,
                 icon: const Icon(Icons.share_location),
               ),
+              const Center(
+                child: Text(
+                  'Get current location',
+                ),
+              ),
             ],
           ),
         ),
@@ -134,23 +146,27 @@ class _AddNewPlaceState extends State<AddNewPlace> {
           placeLon: _lon,
           placeName: placeNameEditController.text);
       // print(place);
-      _pdc.addNewPlace(place).then((value) => {
-            if (value)
-              {
-                Get.back(result: place),
-                EasyLoading.showSuccess('Place saved'),
-              }
-            else
-              EasyLoading.showError('Failed to save data'),
-          });
+      _pdc.addNewPlace(place).then(
+            (value) => {
+              if (value)
+                {
+                  Get.back(result: place),
+                  EasyLoading.showSuccess('Place saved'),
+                }
+              else
+                EasyLoading.showError('Failed to save data'),
+            },
+          );
     }
   }
 
   void _getLocation() async {
-    await _scon.getPosition();
-    setState(() {
-      _lat = _scon.lat;
-      _lon = _scon.lon;
-    });
+    await _sCon.getPosition();
+    setState(
+      () {
+        _lat = _sCon.lat;
+        _lon = _sCon.lon;
+      },
+    );
   }
 }

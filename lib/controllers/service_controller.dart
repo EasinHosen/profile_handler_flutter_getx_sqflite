@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -61,7 +62,9 @@ class ServiceController extends GetxController {
               .getIsNotificationEnabled(keyIsNotificationEnabled),
         },
       );
-      print('monitor enabled');
+      if (kDebugMode) {
+        print('monitor enabled');
+      }
       EasyLoading.showToast('Monitoring Enabled');
     }
   }
@@ -69,7 +72,9 @@ class ServiceController extends GetxController {
   Future<void> disableMonitoring() async {
     SettingsController().setMonitoring(keyMonitor, false);
     await Workmanager().cancelAll();
-    print('monitor disabled');
+    if (kDebugMode) {
+      print('monitor disabled');
+    }
     EasyLoading.showToast('Monitoring Disabled');
   }
 
@@ -85,13 +90,17 @@ class ServiceController extends GetxController {
     lat = position.latitude;
     lon = position.longitude;
     if (list.isNotEmpty) {
-      print('checking distance');
+      if (kDebugMode) {
+        print('checking distance');
+      }
       for (PlaceModel e in list) {
         if (e.placeEnabled) {
           distance = Geolocator.distanceBetween(
               e.placeLat.toDouble(), e.placeLon.toDouble(), lat, lon);
           if (distance < defDist) {
-            print('condition met');
+            if (kDebugMode) {
+              print('condition met');
+            }
             mode == 'Vibration' ? setVibrateMode() : setSilentMode();
             if (notificationEnabled) {
               notificationService(
@@ -101,15 +110,21 @@ class ServiceController extends GetxController {
             }
             return;
           } else {
-            print('condition not met');
+            if (kDebugMode) {
+              print('condition not met');
+            }
           }
         } else {
-          print('not enabled');
+          if (kDebugMode) {
+            print('not enabled');
+          }
           setNormalMode();
         }
       }
     } else {
-      print('Empty list');
+      if (kDebugMode) {
+        print('Empty list');
+      }
     }
   }
 }

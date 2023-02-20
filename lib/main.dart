@@ -16,7 +16,6 @@ void main() async {
   await GetStorage.init();
   await Workmanager().initialize(
     callbackDispatcher,
-    // isInDebugMode: true,
   );
   AwesomeNotifications().initialize(
     null,
@@ -26,7 +25,6 @@ void main() async {
           channelName: 'KKEB',
           channelDescription: 'Channel Desc'),
     ],
-    debug: true,
   );
   runApp(
     const MyApp(),
@@ -47,6 +45,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       builder: EasyLoading.init(),
       initialRoute: pageHome,
+      debugShowCheckedModeBanner: false,
       theme: settingsController.theme,
       getPages: [
         GetPage(
