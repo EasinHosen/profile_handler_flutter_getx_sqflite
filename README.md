@@ -5,7 +5,7 @@ Hope it comes handy!!!
 
 #Screenshots
 ---------------------------------------------------------------------------------------------------------
-<img src="https://user-images.githubusercontent.com/72916174/220132145-514b8c7b-0c29-42a6-8e8d-2334df45bf0b.png" width=45% height=45%> <img src="https://user-images.githubusercontent.com/72916174/220132341-034021d2-80e6-46ed-bec4-0ada9812ebd7.png" width=45% height=45%>
+<img src="https://user-images.githubusercontent.com/72916174/220132145-514b8c7b-0c29-42a6-8e8d-2334df45bf0b.png" width=45% height=45%> <img src="https://user-images.githubusercontent.com/72916174/220134862-9e9f44ae-5e65-40fe-b68c-7d7461f3e496.png" width=45% height=45%>
 
 <img src="https://user-images.githubusercontent.com/72916174/220132740-b79a10e1-04b1-4d9b-93fd-2577b308ebb5.png" width=45% height=45%> <img src="https://user-images.githubusercontent.com/72916174/220132770-9d442dd4-d280-4390-8a58-491e0e4af700.png" width=45% height=45%>
 
