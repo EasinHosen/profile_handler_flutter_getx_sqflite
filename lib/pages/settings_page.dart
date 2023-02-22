@@ -7,7 +7,9 @@ import 'package:profile_handler/controllers/settings_controller.dart';
 import 'package:profile_handler/services/service_profile.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({Key? key, required this.title}) : super(key: key);
+  SettingsPage({Key? key, required this.title}) : super(key: key);
+
+  SettingsController controller = Get.find();
 
   final String title;
 
@@ -19,8 +21,7 @@ class SettingsPage extends StatelessWidget {
       ),
       body: SafeArea(
         child: GetBuilder<SettingsController>(
-          init: SettingsController(),
-          builder: (controller) => Column(
+          builder: (_) => Column(
             children: [
               ListTile(
                 title: const Text('Dark theme'),

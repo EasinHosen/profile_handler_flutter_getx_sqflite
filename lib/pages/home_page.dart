@@ -16,7 +16,7 @@ class HomePage extends StatelessWidget {
 
   final PlaceDataController _pdc = Get.put(PlaceDataController());
   final ServiceController _sc = Get.put(ServiceController());
-  final SettingsController _setC = Get.put(SettingsController());
+  final SettingsController _setC = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -43,13 +43,17 @@ class HomePage extends StatelessWidget {
             onSelected: (result) {
               switch (result) {
                 case 0:
-                  _setC.getMonitoringVal(keyMonitor)
-                      ? _sc
-                          .disableMonitoring()
-                          .then((value) => _setC.monitorEnable.value = false)
-                      : _sc
-                          .enableMonitoring()
-                          .then((value) => _setC.monitorEnable.value = true);
+                  if (_pdc.listOfPlaces.isNotEmpty) {
+                    _setC.getMonitoringVal(keyMonitor)
+                        ? _sc
+                            .disableMonitoring()
+                            .then((value) => _setC.monitorEnable.value = false)
+                        : _sc
+                            .enableMonitoring()
+                            .then((value) => _setC.monitorEnable.value = true);
+                  } else {
+                    EasyLoading.showError('Place list is empty!!');
+                  }
                   break;
                 case 1:
                   Get.toNamed(pageSettings);
@@ -95,121 +99,131 @@ class HomePage extends StatelessWidget {
       ),
       body: SafeArea(
         child: Obx(
-          () => ListView.builder(
-            itemCount: _pdc.listOfPlaces.length,
-            itemBuilder: (context, index) {
-              final place = _pdc.listOfPlaces[index];
-              return ListTile(
-                title: Text(place.placeName),
-                onTap: () {
-                  if (kDebugMode) {
-                    print('${place.placeName} ${place.placeId} $index');
-                  }
-                  _pdc.placeNameController.text = place.placeName;
-                  Get.defaultDialog(
-                      title: '',
-                      barrierDismissible: false,
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextField(
-                            controller: _pdc.placeNameController,
-                            keyboardType: TextInputType.text,
-                            maxLines: 1,
-                            decoration: const InputDecoration(
-                              labelText: 'Place Name',
-                              hintMaxLines: 1,
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.green,
-                                  width: 4.0,
+          () => _pdc.listOfPlaces.isEmpty
+              ? const Center(
+                  child: Text(
+                    'List is empty! \nPlease add a place.',
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: _pdc.listOfPlaces.length,
+                  itemBuilder: (context, index) {
+                    final place = _pdc.listOfPlaces[index];
+                    return ListTile(
+                      title: Text(place.placeName),
+                      onTap: () {
+                        if (kDebugMode) {
+                          print('${place.placeName} ${place.placeId} $index');
+                        }
+                        _pdc.placeNameController.text = place.placeName;
+                        Get.defaultDialog(
+                            title: '',
+                            barrierDismissible: false,
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextField(
+                                  controller: _pdc.placeNameController,
+                                  keyboardType: TextInputType.text,
+                                  maxLines: 1,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Place Name',
+                                    hintMaxLines: 1,
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.green,
+                                        width: 4.0,
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          Obx(
-                            () => Text(
-                              _pdc.placeNameEmpty.value
-                                  ? 'Place name can not be left empty!!'
-                                  : '',
-                              style: const TextStyle(
-                                  color: Colors.red, fontSize: 12.0),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 16.0,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              TextButton(
-                                onPressed: () {
-                                  _pdc.placeNameEmpty.value = false;
-                                  Get.back();
-                                },
-                                child: const Text('Cancel'),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  if (_pdc
-                                      .placeNameController.text.isNotEmpty) {
-                                    _pdc.updatePlaceName(index, place.placeId!,
-                                        _pdc.placeNameController.text);
-                                    _pdc.placeNameEmpty.value = false;
-                                    Get.back();
-                                  } else {
-                                    _pdc.placeNameEmpty.value = true;
-                                  }
-                                },
-                                child: const Text(
-                                  'Save',
+                                const SizedBox(
+                                  height: 8,
                                 ),
-                              ),
-                            ],
-                          )
-                        ],
+                                Obx(
+                                  () => Text(
+                                    _pdc.placeNameEmpty.value
+                                        ? 'Place name can not be left empty!!'
+                                        : '',
+                                    style: const TextStyle(
+                                        color: Colors.red, fontSize: 12.0),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 16.0,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        _pdc.placeNameEmpty.value = false;
+                                        Get.back();
+                                      },
+                                      child: const Text('Cancel'),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        if (_pdc.placeNameController.text
+                                            .isNotEmpty) {
+                                          _pdc.updatePlaceName(
+                                              index,
+                                              place.placeId!,
+                                              _pdc.placeNameController.text);
+                                          _pdc.placeNameEmpty.value = false;
+                                          Get.back();
+                                        } else {
+                                          _pdc.placeNameEmpty.value = true;
+                                        }
+                                      },
+                                      child: const Text(
+                                        'Save',
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                            radius: 10.0);
+                      },
+                      onLongPress: () {
+                        Get.defaultDialog(
+                          title: 'Attention!!',
+                          middleText:
+                              'Do you want to delete ${place.placeName}?',
+                          // content: //or this can be used
+                          // actions:
+                          textConfirm: 'yes',
+                          textCancel: 'no',
+                          onConfirm: () {
+                            _pdc.deletePlace(place.placeId);
+                            EasyLoading.showSuccess(
+                                '${place.placeName} was deleted.');
+                            Get.back();
+                          },
+                          onCancel: () {
+                            if (kDebugMode) {
+                              print('Canceled');
+                            }
+                            Get.back();
+                          },
+                          barrierDismissible: false,
+                        );
+                      },
+                      trailing: Switch(
+                        value: place.placeEnabled,
+                        onChanged: (value) {
+                          final val = place.placeEnabled ? 0 : 1;
+                          _pdc.changeEnabled(index, place.placeId!, val);
+                        },
                       ),
-                      radius: 10.0);
-                },
-                onLongPress: () {
-                  Get.defaultDialog(
-                    title: 'Attention!!',
-                    middleText: 'Do you want to delete ${place.placeName}?',
-                    // content: //or this can be used
-                    // actions:
-                    textConfirm: 'yes',
-                    textCancel: 'no',
-                    onConfirm: () {
-                      _pdc.deletePlace(place.placeId);
-                      EasyLoading.showSuccess(
-                          '${place.placeName} was deleted.');
-                      Get.back();
-                    },
-                    onCancel: () {
-                      if (kDebugMode) {
-                        print('Canceled');
-                      }
-                      Get.back();
-                    },
-                    barrierDismissible: false,
-                  );
-                },
-                trailing: Switch(
-                  value: place.placeEnabled,
-                  onChanged: (value) {
-                    final val = place.placeEnabled ? 0 : 1;
-                    _pdc.changeEnabled(index, place.placeId!, val);
+                    );
                   },
                 ),
-              );
-            },
-          ),
         ),
       ),
     );

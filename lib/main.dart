@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: pageSettings,
-          page: () => const SettingsPage(title: 'Settings'),
+          page: () => SettingsPage(title: 'Settings'),
         ),
       ],
     );

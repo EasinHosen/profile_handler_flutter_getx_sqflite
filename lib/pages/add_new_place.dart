@@ -22,9 +22,9 @@ class _AddNewPlaceState extends State<AddNewPlace> {
   double _lat = 0;
   double _lon = 0;
 
-  final _pdc = PlaceDataController();
+  final PlaceDataController _pdc = Get.find();
 
-  final _sCon = ServiceController();
+  final ServiceController _sCon = Get.find();
 
   @override
   void dispose() {
