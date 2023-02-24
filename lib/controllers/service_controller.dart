@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:profile_handler/models/place_model.dart';
 import 'package:profile_handler/services/service_awesome_notification.dart';
+import 'package:sound_mode/utils/ringer_mode_statuses.dart';
 import 'package:workmanager/workmanager.dart';
 
 import 'package:profile_handler/constants/constants.dart';
@@ -101,7 +102,13 @@ class ServiceController extends GetxController {
             if (kDebugMode) {
               print('condition met');
             }
-            mode == 'Vibration' ? setVibrateMode() : setSilentMode();
+            getCurrentSoundMode().then((value) => {
+                  if (value != RingerModeStatus.vibrate ||
+                      value != RingerModeStatus.silent)
+                    {
+                      mode == 'Vibration' ? setVibrateMode() : setSilentMode(),
+                    },
+                });
             if (notificationEnabled) {
               notificationService(
                 'Profile changed!!',
@@ -113,12 +120,18 @@ class ServiceController extends GetxController {
             if (kDebugMode) {
               print('condition not met');
             }
+            if (notificationEnabled) {
+              notificationService(
+                'Profile changed!!',
+                'Place disabled or outside listed places, switching to Normal mode!!',
+              );
+            }
+            setNormalMode();
           }
         } else {
           if (kDebugMode) {
             print('not enabled');
           }
-          setNormalMode();
         }
       }
     } else {
