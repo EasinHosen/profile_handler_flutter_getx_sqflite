@@ -10,6 +10,7 @@ const String tablePlacesIsEnabled = 'placeEnabled';
 const String pageHome = '/home_page';
 const String pageAddNewPlace = '/add_new_place_page';
 const String pageSettings = '/settings_page';
+const String pageMap = '/map_screen_page';
 
 //Workmanager related
 const String taskPeriodicBG = 'backgroundPeriodicTask';

@@ -7,6 +7,7 @@ import 'package:profile_handler/controllers/settings_controller.dart';
 import 'package:profile_handler/pages/add_new_place.dart';
 import 'package:profile_handler/pages/home_page.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:profile_handler/pages/map_screen_page.dart';
 import 'package:profile_handler/pages/settings_page.dart';
 import 'package:profile_handler/services/service_workmanager.dart';
 import 'package:workmanager/workmanager.dart';
@@ -59,6 +60,10 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: pageSettings,
           page: () => SettingsPage(title: 'Settings'),
+        ),
+        GetPage(
+          name: pageMap,
+          page: () => const MapScreenPage(),
         ),
       ],
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:profile_handler/constants/constants.dart';
 import 'package:profile_handler/controllers/place_data_controller.dart';
 import 'package:profile_handler/controllers/service_controller.dart';
 import 'package:profile_handler/models/place_model.dart';
@@ -123,14 +124,36 @@ class _AddNewPlaceState extends State<AddNewPlace> {
               const SizedBox(
                 height: 10,
               ),
-              IconButton(
-                onPressed: _getLocation,
-                icon: const Icon(Icons.share_location),
-              ),
-              const Center(
-                child: Text(
-                  'Get current location',
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
+                    children: [
+                      IconButton(
+                        onPressed: _getLocation,
+                        icon: const Icon(Icons.share_location),
+                      ),
+                      const Center(
+                        child: Text(
+                          'Get current location',
+                        ),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      IconButton(
+                        onPressed: _getFromMap,
+                        icon: const Icon(Icons.map_rounded),
+                      ),
+                      const Center(
+                        child: Text(
+                          'Select from map',
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ],
           ),
@@ -168,5 +191,18 @@ class _AddNewPlaceState extends State<AddNewPlace> {
         _lon = _sCon.lon;
       },
     );
+  }
+
+  void _getFromMap() {
+    Get.toNamed(pageMap)?.then((value) {
+      if (value != null) {
+        setState(() {
+          _lat = value!.latitude;
+          _lon = value!.longitude;
+        });
+      } else {
+        EasyLoading.showError('No place selected!');
+      }
+    });
   }
 }
