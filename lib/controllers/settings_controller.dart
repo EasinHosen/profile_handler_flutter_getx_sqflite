@@ -62,10 +62,12 @@ class SettingsController extends GetxController {
   ThemeData get theme => getIsDarkTheme(keyIsDarkTheme)
       ? ThemeData(
           brightness: Brightness.dark,
+          primaryColorDark: Colors.teal,
           primarySwatch: Colors.teal,
         )
       : ThemeData(
           brightness: Brightness.light,
+          primaryColorLight: Colors.teal,
           primarySwatch: Colors.teal,
         );
 

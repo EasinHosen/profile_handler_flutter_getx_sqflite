@@ -20,7 +20,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.18.6 <3.0.0'
+  sdk: '>=3.2.2 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -35,23 +35,27 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  awesome_notifications: ^0.7.4+1
-  cupertino_icons: ^1.0.5
+  awesome_notifications: ^0.10.1
+  cupertino_icons: ^1.0.8
   flutter_easyloading:
   #  flutter_local_notifications: ^13.0.0
-  geocoding:
-  geolocator: ^9.0.2
-  get: ^4.6.5
+  geocoding: ^4.0.0
+  geolocator: ^13.0.4
+  geolocator_android: 4.6.1
+  get: ^4.6.6
   get_storage: ^2.1.1
-  google_maps_flutter: ^2.2.5
+  google_maps_flutter: ^2.5.3
   led_bulb_indicator: ^0.0.1
-  path:
-  sound_mode: ^2.0.2
-  sqflite:
-  workmanager: ^0.5.1
+#  path: ^1.9.0
+  sound_mode: ^3.1.1
+  sqflite: ^2.3.2
+  workmanager: ^0.7.0
 
   #app launcher icon
   flutter_launcher_icons: ^0.14.4
+#  win32: ^5.10.1
+#  flutter_plugin_android_lifecycle: ^2.0.26
+#  path_provider: ^2.1.2
 
 dev_dependencies:
   flutter_test:
