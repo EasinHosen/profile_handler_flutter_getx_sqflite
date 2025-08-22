@@ -62,14 +62,25 @@ class SettingsController extends GetxController {
   ThemeData get theme => getIsDarkTheme(keyIsDarkTheme)
       ? ThemeData(
           brightness: Brightness.dark,
-          primaryColorDark: Colors.teal,
-          primarySwatch: Colors.teal,
+          primaryColor: Colors.teal,
+          colorScheme: const ColorScheme.dark(primary: Colors.teal),
+          appBarTheme: const AppBarTheme().copyWith(
+            titleTextStyle: const TextStyle(color: Colors.white, fontSize: 18),
+            color: Colors.teal,
+            iconTheme: const IconThemeData(color: Colors.white),
+            actionsIconTheme: const IconThemeData(color: Colors.white),
+          ),
         )
       : ThemeData(
           brightness: Brightness.light,
-          primaryColorLight: Colors.teal,
-          primarySwatch: Colors.teal,
-        );
+          primaryColor: Colors.teal,
+          colorScheme: const ColorScheme.light(primary: Colors.teal),
+          appBarTheme: const AppBarTheme().copyWith(
+            titleTextStyle: const TextStyle(color: Colors.white, fontSize: 18),
+            color: Colors.teal,
+            iconTheme: const IconThemeData(color: Colors.white),
+            actionsIconTheme: const IconThemeData(color: Colors.white),
+          ));
 
   void setDefaultDistance(String key, double val) {
     GetStorage().write(key, val);
